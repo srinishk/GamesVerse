@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Brick Game - GamesVerse</title>
+
+    <!--Tailwind-->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #030712;
+            text-align: center;
+            color: white;
+            font-family: 'Comfortaa', Arial, sans-serif;
+        }
+
+        .game-title {
+            color: white;
+            font-size: 2.5rem;
+            margin: 30px 0 20px;
+            letter-spacing: 2px;
+        }
+
+        canvas {
+            background-color: #111827;
+            border: 3px solid #9333ea;
+            border-radius: 16px;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.25);
+        }
+
+        .instructions {
+            font-size: 16px;
+            color: #9ca3af;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--Navbar-->
+    <nav class="mx-10 mt-10 mb-3 bg-gray-900 rounded-2xl shadow-md p-8 flex justify-between items-center">
+
+        <h1 class="text-3xl font-bold tracking-widest text-white">
+            GamesVerse
+        </h1>
+
+        <div class="flex gap-10 text-lg">
+            <a href="home.html" class="text-gray-300 hover:text-white transition">Home</a>
+            <a href="home.html#games" class="text-gray-300 hover:text-white transition">Games</a>
+        </div>
+
+    </nav>
+
+    <canvas id="game" width="500" height="500"></canvas>
+
+    <p class="instructions">Use ← and → keys to move the paddle</p>
+    <!--FOOTER-->
+    <footer class="mt-20 bg-gray-900 text-white rounded-t-3xl px-10 py-10">
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+
+            <!--Brand-->
+            <div class="text-left">
+                <h2 class="text-3xl font-bold tracking-widest">GamesVerse™</h2>
+                <p class="text-gray-400 mt-3 max-w-sm">
+                    Discover, play, and enjoy some of the most popular games all in one place.
+                </p>
+            </div>
+
+            <!--Quick Links-->
+            <div class="text-left md:pl-10">
+                <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <a href="2048.html" class="hover:text-white transition">2048</a>
+                    <a href="memory.html" class="hover:text-white transition">Memory Game</a>
+                    <a href="pong.html" class="hover:text-white transition">Ping Pong Brick Breaker</a>
+                    <a href="hangman.html" class="hover:text-white transition">Hangman</a>
+                </div>
+            </div>
+
+            <!--Time-->
+            <div class="text-left md:pl-10">
+                <h3 class="text-lg font-bold mb-4">Time</h3>
+
+                <div class="text-gray-400">
+                    <div id="time" class="pb-1">00:00:00</div>
+                    <div id="date" class="text-sm">Monday, 1 January</div>
+                    <div id="timezone" class="text-sm">unable to detect timezone</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Bottom-->
+        <div
+            class="max-w-6xl mx-auto border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-500">
+
+            <p>© 2026 GamesVerse. All rights reserved.</p>
+
+            <p>
+                Made with <span class="text-purple-300">♥</span> for gamers
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script>
+        //Canvas
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        //Ball
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height - 70;
+        let ballRadius = 10;
+        let dx = 4;
+        let dy = -4;
+
+        //Paddle
+        let paddleWidth = 100;
+        let paddleHeight = 15;
+        let paddleX = (canvas.width - paddleWidth) / 2;
+        let paddleY = canvas.height - 35;
+        let paddleSpeed = 7;
+
+        let leftPressed = false;
+        let rightPressed = false;
+
+        //Game information
+        let score = 0;
+        let lives = 3;
+        let gameOver = false;
+
+        //Bricks
+        let bricks = [];
+
+        let rows = 4;
+        let columns = 5;
+
+        let brickWidth = 80;
+        let brickHeight = 25;
+        let brickGap = 10;
+
+        let brickStartX = 20;
+        let brickStartY = 40;
+
+        //Create bricks
+        for (let r = 0; r < rows; r++) {
+            bricks[r] = [];
+
+            for (let c = 0; c < columns; c++) {
+                bricks[r][c] = {
+                    x: brickStartX + c * (brickWidth + brickGap),
+                    y: brickStartY + r * (brickHeight + brickGap),
+                    alive: true
+                };
+            }
+        }
+
+        //Keyboard controls
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowLeft") {
+                leftPressed = true;
+            }
+
+            if (event.key === "ArrowRight") {
+                rightPressed = true;
+            }
+
+            //Restart with Space
+            if (event.key === " " && gameOver) {
+                restartGame();
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            if (event.key === "ArrowLeft") {
+                leftPressed = false;
+            }
+
+            if (event.key === "ArrowRight") {
+                rightPressed = false;
+            }
+        });
+
+        //Draw ball
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(
+                ballX,
+                ballY,
+                ballRadius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        //Draw paddle
+        function drawPaddle() {
+            ctx.fillStyle = "#9333ea";
+
+            ctx.fillRect(
+                paddleX,
+                paddleY,
+                paddleWidth,
+                paddleHeight
+            );
+        }
+
+        //Draw bricks
+        function drawBricks() {
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < columns; c++) {
+                    let brick = bricks[r][c];
+
+                    if (brick.alive) {
+                        if (r === 0) {
+                            ctx.fillStyle = "#a855f7";
+                        } else if (r === 1) {
+                            ctx.fillStyle = "#9333ea";
+                        } else if (r === 2) {
+                            ctx.fillStyle = "#7e22ce";
+                        } else {
+                            ctx.fillStyle = "#6b21a8";
+                        }
+
+                        ctx.fillRect(
+                            brick.x,
+                            brick.y,
+                            brickWidth,
+                            brickHeight
+                        );
+                    }
+                }
+            }
+        }
+
+        //Draw score and lives
+        function drawScore() {
+            ctx.font = "18px Comfortaa";
+            ctx.fillStyle = "white";
+
+            ctx.fillText(
+                "Score: " + score,
+                20,
+                490
+            );
+
+            ctx.fillText(
+                "Lives: " + lives,
+                410,
+                490
+            );
+        }
+
+        //Move paddle
+        function movePaddle() {
+            if (leftPressed) {
+                paddleX -= paddleSpeed;
+            }
+
+            if (rightPressed) {
+                paddleX += paddleSpeed;
+            }
+
+            //Keep paddle inside canvas
+            if (paddleX < 0) {
+                paddleX = 0;
+            }
+
+            if (paddleX + paddleWidth > canvas.width) {
+                paddleX = canvas.width - paddleWidth;
+            }
+        }
+
+        //Ball movement
+        function moveBall() {
+            ballX += dx;
+            ballY += dy;
+
+            //Left wall
+            if (ballX - ballRadius < 0) {
+                ballX = ballRadius;
+                dx = -dx;
+            }
+
+            //Right wall
+            if (ballX + ballRadius > canvas.width) {
+                ballX = canvas.width - ballRadius;
+                dx = -dx;
+            }
+
+            //Top wall
+            if (ballY - ballRadius < 0) {
+                ballY = ballRadius;
+                dy = -dy;
+            }
+
+            //Paddle collision
+            if (
+                ballY + ballRadius >= paddleY &&
+                ballY - ballRadius <= paddleY + paddleHeight &&
+                ballX >= paddleX &&
+                ballX <= paddleX + paddleWidth &&
+                dy > 0
+            ) {
+                ballY = paddleY - ballRadius;
+                dy = -Math.abs(dy);
+
+                //Change ball direction depending on where it hits the paddle
+                let hitPosition =
+                    (ballX - paddleX) / paddleWidth;
+
+                dx = (hitPosition - 0.5) * 8;
+            }
+
+            //Ball falls below paddle
+            if (ballY - ballRadius > canvas.height) {
+                lives--;
+
+                if (lives <= 0) {
+                    gameOver = true;
+                    return;
+                }
+
+                resetBall();
+            }
+        }
+
+        //Brick collision
+        function brickCollision() {
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < columns; c++) {
+                    let brick = bricks[r][c];
+
+                    if (!brick.alive) {
+                        continue;
+                    }
+
+                    if (
+                        ballX + ballRadius > brick.x &&
+                        ballX - ballRadius < brick.x + brickWidth &&
+                        ballY + ballRadius > brick.y &&
+                        ballY - ballRadius < brick.y + brickHeight
+                    ) {
+                        brick.alive = false;
+                        dy = -dy;
+                        score += 10;
+
+                        //Check whether all bricks are destroyed
+                        if (score === rows * columns * 10) {
+                            gameOver = true;
+                        }
+
+                        return;
+                    }
+                }
+            }
+        }
+
+        //Reset ball after losing a life
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height - 70;
+
+            dx = 4;
+            dy = -4;
+
+            paddleX =
+                (canvas.width - paddleWidth) / 2;
+        }
+
+        //Restart game
+        function restartGame() {
+            score = 0;
+            lives = 3;
+            gameOver = false;
+
+            resetBall();
+
+            //Recreate bricks
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < columns; c++) {
+                    bricks[r][c].alive = true;
+                }
+            }
+        }
+
+        //Game over / win message
+        function drawGameMessage() {
+            if (!gameOver) {
+                return;
+            }
+
+            ctx.fillStyle = "rgba(3, 7, 18, 0.85)";
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            ctx.textAlign = "center";
+
+            if (lives <= 0) {
+                ctx.fillStyle = "#a855f7";
+                ctx.font = "40px Comfortaa";
+
+                ctx.fillText(
+                    "GAME OVER",
+                    canvas.width / 2,
+                    220
+                );
+            } else {
+                ctx.fillStyle = "#c084fc";
+                ctx.font = "40px Comfortaa";
+
+                ctx.fillText(
+                    "YOU WIN!",
+                    canvas.width / 2,
+                    220
+                );
+            }
+
+            ctx.fillStyle = "white";
+            ctx.font = "20px Comfortaa";
+
+            ctx.fillText(
+                "Score: " + score,
+                canvas.width / 2,
+                260
+            );
+
+            ctx.fillText(
+                "Press SPACE to restart",
+                canvas.width / 2,
+                300
+            );
+
+            ctx.textAlign = "left";
+        }
+
+        //Draw everything
+        function draw() {
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            drawBricks();
+            drawBall();
+            drawPaddle();
+            drawScore();
+            drawGameMessage();
+        }
+
+        //Main game loop
+        function gameLoop() {
+            if (!gameOver) {
+                movePaddle();
+                moveBall();
+                brickCollision();
+            }
+
+            draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        //Start game
+        gameLoop();
+
+        //Time and date for footer
+        const days = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ];
+
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        function updateWatch() {
+            const now = new Date();
+
+            //Get hours, minutes and seconds
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            //Add leading zero
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+
+            //Show time
+            document.getElementById("time").textContent =
+                hours + ":" + minutes + ":" + seconds;
+
+            //Get date
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const dateNum = now.getDate();
+
+            //Show date
+            document.getElementById("date").textContent =
+                dayName + ", " + dateNum + " " + monthName;
+        }
+
+        //Update immediately and every second
+        updateWatch();
+        setInterval(updateWatch, 1000);
+
+        //Get timezone
+        const timezone =
+            Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        document.getElementById("timezone").textContent =
+            timezone;
+    </script>
+
+</body>
+
+</html>

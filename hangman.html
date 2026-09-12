@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman - GamesVerse</title>
+
+    <!--Tailwind-->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        #wordDisplay {
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body class="m-0 text-center font-['Comfortaa'] bg-gray-950 text-white min-h-screen">
+
+    <!--Navbar-->
+    <nav class="mx-10 mt-10 mb-5 bg-gray-900 rounded-2xl shadow-md p-8 flex justify-between items-center">
+
+        <h1 class="text-3xl font-bold tracking-widest text-white">
+            GamesVerse
+        </h1>
+
+        <div class="flex gap-10 text-lg">
+            <a href="home.html" class="text-gray-300 hover:text-white transition">
+                Home
+            </a>
+
+            <a href="home.html#games" class="text-gray-300 hover:text-white transition">
+                Games
+            </a>
+        </div>
+
+    </nav>
+
+    <!--Hangman Game-->
+    <div
+        class="w-[600px] max-w-[90%] mx-auto mb-5 p-4 bg-gray-900 border-2 border-purple-900 rounded-3xl shadow-[0_0_30px_rgba(147,51,234,0.15)]">
+
+        <img src="costume2.svg" id="myImage" class="h-[250px] max-w-full mx-auto object-contain">
+
+        <h2 id="wordDisplay"
+            class="tracking-[8px] text-[30px] max-sm:text-[22px] text-white my-4 font-bold">
+            -------
+        </h2>
+
+        <h3 id="hintLabel" class="text-purple-300 text-base mb-4">
+            Hint: ???
+        </h3>
+
+        <!--Input-->
+        <input
+            type="text"
+            id="letterInput"
+            maxlength="1"
+            placeholder="Enter Letter"
+            autocomplete="off"
+            class="p-2.5 w-[140px] text-center text-lg rounded-xl border-2 border-purple-900 bg-gray-950 text-white outline-none focus:border-purple-600 font-['Comfortaa']">
+
+        <br><br>
+
+        <!--Buttons-->
+        <button
+            id="checkBtn"
+            class="px-[18px] py-2.5 m-1 rounded-xl cursor-pointer text-[15px] bg-purple-600 text-white border-2 border-purple-700 hover:bg-purple-500 hover:-translate-y-0.5 transition duration-200 font-['Comfortaa']">
+            Check
+        </button>
+
+        <button
+            id="hintBtn"
+            class="px-[18px] py-2.5 m-1 rounded-xl cursor-pointer text-[15px] bg-purple-900 text-white border-2 border-purple-700 hover:bg-purple-800 hover:-translate-y-0.5 transition duration-200 font-['Comfortaa']">
+            Hint
+        </button>
+
+        <button
+            id="resetBtn"
+            class="px-[18px] py-2.5 m-1 rounded-xl cursor-pointer text-[15px] bg-purple-600 text-white border-2 border-purple-700 hover:bg-purple-500 hover:-translate-y-0.5 transition duration-200 font-['Comfortaa']">
+            Restart
+        </button>
+
+        <!--Message-->
+        <p id="message" class="text-xl font-bold text-purple-300 mt-3 min-h-[28px]"></p>
+
+        <!--Wrong Attempts-->
+        <p class="text-gray-300 mt-2">
+            Wrong attempts
+            <span id="wrongCount" class="text-white font-bold">0</span>/6
+        </p>
+
+    </div>
+
+    <!--Footer-->
+    <footer class="mt-10 bg-gray-900 text-white rounded-t-3xl px-10 py-10">
+
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-10 text-left">
+
+            <!--Brand-->
+            <div>
+                <h2 class="text-3xl font-bold tracking-widest">
+                    GamesVerse™
+                </h2>
+
+                <p class="text-gray-400 mt-3 max-w-sm">
+                    Discover, play, and enjoy some of the most popular games all in one place.
+                </p>
+            </div>
+
+            <!--Quick Links-->
+            <div>
+                <h3 class="text-lg font-bold mb-4">
+                    Quick Links
+                </h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <a href="2048.html" class="hover:text-white transition">
+                        2048
+                    </a>
+
+                    <a href="memory.html" class="hover:text-white transition">
+                        Memory Game
+                    </a>
+
+                    <a href="pong.html" class="hover:text-white transition">
+                        Ping Pong Brick Breaker
+                    </a>
+
+                    <a href="hangman.html" class="hover:text-white transition">
+                        Hangman
+                    </a>
+                </div>
+            </div>
+
+            <!--Time-->
+            <div>
+                <h3 class="text-lg font-bold mb-4">
+                    Time
+                </h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <div class="watch">
+                        <div id="time" class="pb-1">
+                            00:00:00
+                        </div>
+
+                        <div id="date" class="text-sm">
+                            Monday, 1 January
+                        </div>
+
+                        <div id="timezone" class="text-sm">
+                            unable to detect timezone
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Bottom-->
+        <div
+            class="max-w-6xl mx-auto border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-500">
+
+            <p>
+                © 2026 GamesVerse. All rights reserved.
+            </p>
+
+            <p>
+                Made with <span class="text-purple-300">♥</span> for gamers
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script>
+
+        //Words
+        var words = [
+
+            //Video Games
+            { word: "MINECRAFT", hint: "A sandbox game made of blocks" },
+            { word: "FORTNITE", hint: "A battle royale game with building mechanics" },
+            { word: "ROBLOX", hint: "A platform where users create and play games" },
+            { word: "TERRARIA", hint: "A 2D sandbox adventure game" },
+            { word: "VALORANT", hint: "A tactical 5v5 shooter by Riot Games" },
+            { word: "OVERWATCH", hint: "A team-based hero shooter" },
+            { word: "LEAGUEOFLEGENDS", hint: "One of the world's biggest MOBA games" },
+            { word: "ROCKETLEAGUE", hint: "Cars play soccer in this game" },
+            { word: "SUBNAUTICA", hint: "An underwater survival game" },
+            { word: "GEOMETRYDASH", hint: "A rhythm platformer with a jumping cube" },
+
+            //Sporting Events
+            { word: "OLYMPICS", hint: "The world's biggest multi-sport event" },
+            { word: "WORLDCUP", hint: "The biggest tournament in international football" },
+            { word: "WIMBLEDON", hint: "The oldest Grand Slam tennis tournament" },
+            { word: "SUPERBOWL", hint: "The championship game of the NFL" },
+            { word: "IPL", hint: "India's most popular T20 cricket league" },
+            { word: "CHAMPIONSLEAGUE", hint: "Europe's top club football competition" },
+            { word: "FORMULAONE", hint: "The highest class of international auto racing" },
+            { word: "ASHES", hint: "A famous cricket series between England and Australia" },
+            { word: "USOPEN", hint: "A Grand Slam tennis tournament in New York" },
+            { word: "TOURDEFRANCE", hint: "The world's most famous cycling race" },
+
+            //Superheroes
+            { word: "SPIDERMAN", hint: "The friendly neighborhood superhero" },
+            { word: "BATMAN", hint: "The Dark Knight of Gotham" },
+            { word: "SUPERMAN", hint: "The Man of Steel" },
+            { word: "IRONMAN", hint: "A billionaire in powered armor" },
+            { word: "THOR", hint: "The Norse God of Thunder" },
+            { word: "HULK", hint: "A giant green superhero" },
+            { word: "WONDERWOMAN", hint: "Amazonian warrior princess" },
+            { word: "FLASH", hint: "The fastest superhero alive" },
+            { word: "BLACKPANTHER", hint: "The king of Wakanda" },
+            { word: "DOCTORSTRANGE", hint: "Master of the Mystic Arts" },
+
+            //Movies
+            { word: "AVATAR", hint: "The highest-grossing movie for many years" },
+            { word: "TITANIC", hint: "A famous film about a sinking ship" },
+            { word: "INTERSTELLAR", hint: "Christopher Nolan's epic space film" },
+            { word: "INCEPTION", hint: "A movie about dreams within dreams" },
+            { word: "JURASSICPARK", hint: "Dinosaurs are brought back to life" },
+            { word: "FROZEN", hint: "Disney movie featuring Elsa" },
+            { word: "MOANA", hint: "Disney movie about sailing across the ocean" },
+            { word: "COCO", hint: "Pixar film inspired by the Day of the Dead" },
+            { word: "ENDGAME", hint: "The climax of Marvel's Infinity Saga" },
+            { word: "TOPGUN", hint: "A movie about elite fighter pilots" },
+
+            //Famous Landmarks
+            { word: "EIFFELTOWER", hint: "The symbol of Paris" },
+            { word: "TAJMAHAL", hint: "A white marble monument in India" },
+            { word: "PYRAMIDSOFGIZA", hint: "Ancient wonders in Egypt" },
+            { word: "GREATWALL", hint: "A massive historic wall in China" },
+            { word: "BIGBEN", hint: "The famous clock tower in London" },
+            { word: "STATUEOFLIBERTY", hint: "A gift from France to the USA" },
+            { word: "COLOSSEUM", hint: "Ancient Roman amphitheater" },
+            { word: "BURJKHALIFA", hint: "The tallest building in the world" },
+
+            //Space Missions
+            { word: "APOLLOELEVEN", hint: "First mission to land humans on the Moon" },
+            { word: "CHANDRAYAAN", hint: "India's lunar exploration mission" },
+            { word: "MANGALYAAN", hint: "India's Mars Orbiter Mission" },
+            { word: "VOYAGER", hint: "Space probes exploring beyond the Solar System" },
+            { word: "ARTEMIS", hint: "NASA's mission to return humans to the Moon" }
+
+        ];
+
+        //Game Variables
+        var selected = words[Math.floor(Math.random() * words.length)];
+
+        var word = selected.word;
+        var hint = selected.hint;
+
+        var guessedWord = [];
+        var guessedLetters = [];
+        var wrong = 0;
+        var maxWrong = 6;
+        var gameFinished = false;
+
+        //Create hidden word
+        for (let i = 0; i < word.length; i++) {
+            guessedWord.push("_");
+        }
+
+        //Update display
+        function updateDisplay() {
+            document.getElementById("wordDisplay").textContent =
+                guessedWord.join(" ");
+
+            document.getElementById("wrongCount").textContent =
+                wrong;
+        }
+
+        //Show hint
+        function showHint() {
+            document.getElementById("hintLabel").textContent =
+                "Hint: " + hint;
+
+            document.getElementById("hintBtn").disabled = true;
+        }
+
+        //Restart game
+        function restartGame() {
+            location.reload();
+        }
+
+        //Check answer
+        function checkAnswer() {
+
+            if (gameFinished) {
+                return;
+            }
+
+            var input = document.getElementById("letterInput");
+            var letter = input.value.toUpperCase();
+            var message = document.getElementById("message");
+
+            //Check for empty input
+            if (letter === "") {
+                message.textContent = "Enter a letter.";
+                return;
+            }
+
+            //Check for letters only
+            if (!/^[A-Z]$/.test(letter)) {
+                message.textContent = "Enter a letter from A-Z.";
+                input.value = "";
+                return;
+            }
+
+            //Check for repeated letter
+            if (guessedLetters.includes(letter)) {
+                message.textContent = "You already guessed that!";
+                input.value = "";
+                return;
+            }
+
+            guessedLetters.push(letter);
+
+            var matched = false;
+
+            //Check letter
+            for (let i = 0; i < word.length; i++) {
+
+                if (word[i] === letter) {
+                    guessedWord[i] = letter;
+                    matched = true;
+                }
+
+            }
+
+            //Correct answer
+            if (matched) {
+
+                message.textContent = "Correct!";
+                message.className =
+                    "text-xl font-bold text-purple-300 mt-3 min-h-[28px]";
+
+            }
+
+            //Wrong answer
+            else {
+
+                wrong++;
+
+                message.textContent = "Wrong!";
+                message.className =
+                    "text-xl font-bold text-purple-400 mt-3 min-h-[28px]";
+
+                document.getElementById("myImage").src =
+                    "costume" + (2 + wrong) + ".svg";
+            }
+
+            input.value = "";
+
+            updateDisplay();
+
+            //Win
+            if (!guessedWord.includes("_")) {
+
+                gameFinished = true;
+
+                message.textContent = "🎉 You Win!";
+                message.className =
+                    "text-xl font-bold text-purple-300 mt-3 min-h-[28px]";
+
+                document.getElementById("checkBtn").disabled = true;
+                document.getElementById("hintBtn").disabled = true;
+                document.getElementById("letterInput").disabled = true;
+            }
+
+            //Lose
+            if (wrong >= maxWrong) {
+
+                gameFinished = true;
+
+                message.textContent =
+                    "You Lose! The word was " + word;
+
+                message.className =
+                    "text-xl font-bold text-purple-400 mt-3 min-h-[28px]";
+
+                document.getElementById("checkBtn").disabled = true;
+                document.getElementById("hintBtn").disabled = true;
+                document.getElementById("letterInput").disabled = true;
+            }
+        }
+
+        //Button controls
+        document.getElementById("checkBtn").onclick = checkAnswer;
+        document.getElementById("hintBtn").onclick = showHint;
+        document.getElementById("resetBtn").onclick = restartGame;
+
+        //Enter key
+        document.getElementById("letterInput").addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+                    checkAnswer();
+                }
+
+            }
+        );
+
+        //Start game
+        updateDisplay();
+
+        //Time and date for footer
+        const days = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ];
+
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        //Update footer clock
+        function updateWatch() {
+
+            const now = new Date();
+
+            //Get hours, minutes and seconds
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            //Add leading zero
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+
+            //Show time
+            document.getElementById("time").textContent =
+                hours + ":" + minutes + ":" + seconds;
+
+            //Get date
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const dateNum = now.getDate();
+
+            //Show date
+            document.getElementById("date").textContent =
+                dayName + ", " + dateNum + " " + monthName;
+        }
+
+        //Update immediately and every second
+        updateWatch();
+        setInterval(updateWatch, 1000);
+
+        //Get timezone
+        const timezone =
+            Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        document.getElementById("timezone").textContent =
+            timezone;
+
+    </script>
+
+</body>
+
+</html>

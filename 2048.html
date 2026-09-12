@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048 - GamesVerse</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="bg-gray-950 font-['Comfortaa'] text-gray-300 min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="m-10 bg-gray-900 rounded-2xl shadow-md p-8 flex justify-between items-center">
+
+        <h1 class="text-3xl font-bold tracking-widest text-white">
+            GamesVerse
+        </h1>
+
+        <div class="flex gap-10 text-lg">
+            <a href="home.html" class="text-gray-300 hover:text-white transition">
+                Home
+            </a>
+
+            <a href="home.html#games" class="text-gray-300 hover:text-white transition">
+                Games
+            </a>
+        </div>
+
+    </nav>
+
+
+    <!-- GAME CONTAINER -->
+    <main class="max-w-2xl mx-auto px-6 pb-5">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center mb-6">
+
+            <div>
+                <h1 class="text-6xl md:text-7xl font-bold text-white">
+                    2048
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Merge your way to 2048.
+                </p>
+            </div>
+
+
+            <!-- SCORES -->
+            <div class="flex gap-2">
+
+                <!-- SCORE -->
+                <div class="bg-purple-900 text-white rounded-xl px-5 py-3 text-center min-w-[90px]">
+
+                    <p class="text-xs text-purple-200 uppercase tracking-widest">
+                        Score
+                    </p>
+
+                    <p id="score" class="text-2xl font-bold text-white">
+                        0
+                    </p>
+
+                </div>
+
+
+                <!-- BEST -->
+                <div class="bg-purple-900 text-white rounded-xl px-5 py-3 text-center min-w-[90px]">
+
+                    <p class="text-xs text-purple-200 uppercase tracking-widest">
+                        Best
+                    </p>
+
+                    <p id="best" class="text-2xl font-bold text-white">
+                        0
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INSTRUCTIONS -->
+        <div class="bg-gray-900 border border-gray-800 rounded-xl px-5 py-4 mb-5 text-center">
+
+            <p class="text-gray-400">
+                Use
+                <b class="text-purple-400">Arrow Keys</b>
+                or
+                <b class="text-purple-400">W A S D</b>
+                to move
+            </p>
+
+        </div>
+
+
+        <!-- GAME BOARD -->
+        <div id="board"
+            class="bg-gray-900 border-2 border-purple-900 p-3 rounded-2xl grid grid-cols-4 gap-3 shadow-lg">
+        </div>
+
+
+        <!-- RESTART BUTTON -->
+        <div class="flex justify-center mt-6">
+
+            <button onclick="restartGame()"
+                class="bg-purple-600 text-white font-bold px-7 py-3 rounded-2xl
+                       border-2 border-purple-700
+                       hover:bg-purple-500
+                       hover:border-purple-600
+                       transition-all duration-300
+                       hover:-translate-y-1">
+
+                Restart
+
+            </button>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+        <div id="message" class="text-center text-3xl font-bold text-purple-400 mt-5 min-h-[40px]">
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-20 bg-gray-900 text-white rounded-t-3xl px-10 py-10">
+
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-10">
+
+            <!-- Brand -->
+            <div>
+                <h2 class="text-3xl font-bold tracking-widest">GameVerse™</h2>
+                <p class="text-gray-400 mt-3 max-w-sm">
+                    Discover, play, and enjoy some of the most popular games all in one place.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <a href="2048.html" class="hover:text-white transition">2048</a>
+                    <a href="memory.html" class="hover:text-white transition">Memory Game</a>
+                    <a href="pong.html" class="hover:text-white transition">Ping Pong Brick Breaker</a>
+                    <a href="hangman.html" class="hover:text-white transition">Hangman</a>
+                </div>
+            </div>
+
+            <!-- Time -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">Time</h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <div class="watch">
+                        <div id="time" class="pb-1">00:00:00</div>
+                        <div id="date" class="text-sm">Monday, 1 January</div>
+                        <div id="timezone" class="text-sm">unable to detect timezone</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom -->
+        <div
+            class="max-w-6xl mx-auto border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-500">
+
+            <p>© 2026 GamesVerse. All rights reserved.</p>
+
+            <p>
+                Made with <span class="text-purple-300">♥</span> for gamers
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script>
+
+        // GAME VARIABLES
+        let board;
+        let score = 0;
+
+        let best = localStorage.getItem("best2048") || 0;
+
+        document.getElementById("best").innerText = best;
+
+
+        // START GAME
+        function startGame() {
+
+            board = [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ];
+
+            score = 0;
+
+            document.getElementById("score").innerText = score;
+
+            document.getElementById("message").innerText = "";
+
+            addRandomTile();
+            addRandomTile();
+
+            drawBoard();
+        }
+
+
+        // ADD RANDOM TILE
+        function addRandomTile() {
+
+            let emptyCells = [];
+
+            for (let row = 0; row < 4; row++) {
+
+                for (let col = 0; col < 4; col++) {
+
+                    if (board[row][col] === 0) {
+
+                        emptyCells.push([row, col]);
+
+                    }
+
+                }
+
+            }
+
+
+            if (emptyCells.length === 0) {
+                return;
+            }
+
+
+            let randomCell =
+                emptyCells[Math.floor(Math.random() * emptyCells.length)];
+
+            let row = randomCell[0];
+            let col = randomCell[1];
+
+
+            if (Math.random() < 0.9) {
+
+                board[row][col] = 2;
+
+            } else {
+
+                board[row][col] = 4;
+
+            }
+
+        }
+
+
+        // DRAW BOARD
+        function drawBoard() {
+
+            let boardElement = document.getElementById("board");
+
+            boardElement.innerHTML = "";
+
+
+            for (let row = 0; row < 4; row++) {
+
+                for (let col = 0; col < 4; col++) {
+
+                    let value = board[row][col];
+
+                    let tile = document.createElement("div");
+
+
+                    tile.className =
+                        "aspect-square rounded-xl flex justify-center items-center font-bold transition-all duration-150";
+
+
+                    // EMPTY TILE
+                    if (value === 0) {
+
+                        tile.classList.add(
+                            "bg-gray-800",
+                            "border",
+                            "border-gray-700"
+                        );
+
+                    }
+
+
+                    // 2
+                    else if (value === 2) {
+
+                        tile.classList.add(
+                            "bg-purple-950",
+                            "text-purple-200",
+                            "border",
+                            "border-purple-900",
+                            "text-4xl"
+                        );
+
+                    }
+
+
+                    // 4
+                    else if (value === 4) {
+
+                        tile.classList.add(
+                            "bg-purple-900",
+                            "text-purple-100",
+                            "border",
+                            "border-purple-700",
+                            "text-4xl"
+                        );
+
+                    }
+
+
+                    // 8
+                    else if (value === 8) {
+
+                        tile.classList.add(
+                            "bg-purple-800",
+                            "text-white",
+                            "border",
+                            "border-purple-600",
+                            "text-4xl"
+                        );
+
+                    }
+
+
+                    // 16
+                    else if (value === 16) {
+
+                        tile.classList.add(
+                            "bg-purple-700",
+                            "text-white",
+                            "border",
+                            "border-purple-500",
+                            "text-4xl"
+                        );
+
+                    }
+
+
+                    // 32
+                    else if (value === 32) {
+
+                        tile.classList.add(
+                            "bg-purple-600",
+                            "text-white",
+                            "border",
+                            "border-purple-400",
+                            "text-4xl"
+                        );
+
+                    }
+
+
+                    // 64
+                    else if (value === 64) {
+
+                        tile.classList.add(
+                            "bg-purple-500",
+                            "text-white",
+                            "border",
+                            "border-purple-300",
+                            "text-4xl"
+                        );
+
+                    }
+
+
+                    // 128
+                    else if (value === 128) {
+
+                        tile.classList.add(
+                            "bg-fuchsia-600",
+                            "text-white",
+                            "border",
+                            "border-fuchsia-400",
+                            "text-3xl"
+                        );
+
+                    }
+
+
+                    // 256
+                    else if (value === 256) {
+
+                        tile.classList.add(
+                            "bg-fuchsia-500",
+                            "text-white",
+                            "border",
+                            "border-fuchsia-300",
+                            "text-3xl"
+                        );
+
+                    }
+
+
+                    // 512
+                    else if (value === 512) {
+
+                        tile.classList.add(
+                            "bg-violet-500",
+                            "text-white",
+                            "border",
+                            "border-violet-300",
+                            "text-3xl"
+                        );
+
+                    }
+
+
+                    // 1024
+                    else if (value === 1024) {
+
+                        tile.classList.add(
+                            "bg-violet-400",
+                            "text-white",
+                            "border",
+                            "border-violet-200",
+                            "text-2xl"
+                        );
+
+                    }
+
+
+                    // 2048+
+                    else {
+
+                        tile.classList.add(
+                            "bg-purple-300",
+                            "text-gray-950",
+                            "border",
+                            "border-purple-100",
+                            "text-2xl"
+                        );
+
+                    }
+
+
+                    if (value !== 0) {
+
+                        tile.innerText = value;
+
+                    }
+
+
+                    boardElement.appendChild(tile);
+
+                }
+
+            }
+
+
+            // UPDATE SCORE
+            document.getElementById("score").innerText = score;
+
+
+            // UPDATE BEST SCORE
+            if (score > best) {
+
+                best = score;
+
+                localStorage.setItem("best2048", best);
+
+                document.getElementById("best").innerText = best;
+
+            }
+
+        }
+
+
+        // MOVE LEFT
+        function moveLeft() {
+
+            let moved = false;
+
+
+            for (let row = 0; row < 4; row++) {
+
+                let oldRow = [...board[row]];
+
+
+                let numbers =
+                    board[row].filter(value => value !== 0);
+
+
+                // MERGE TILES
+                for (let i = 0; i < numbers.length - 1; i++) {
+
+                    if (numbers[i] === numbers[i + 1]) {
+
+                        numbers[i] *= 2;
+
+                        score += numbers[i];
+
+                        numbers[i + 1] = 0;
+
+                    }
+
+                }
+
+
+                // REMOVE ZEROES
+                numbers =
+                    numbers.filter(value => value !== 0);
+
+
+                // ADD ZEROES
+                while (numbers.length < 4) {
+
+                    numbers.push(0);
+
+                }
+
+
+                board[row] = numbers;
+
+
+                // CHECK CHANGE
+                if (
+                    JSON.stringify(oldRow) !==
+                    JSON.stringify(numbers)
+                ) {
+
+                    moved = true;
+
+                }
+
+            }
+
+
+            return moved;
+
+        }
+
+
+        // ROTATE BOARD
+        function rotateBoard() {
+
+            let newBoard = [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ];
+
+
+            for (let row = 0; row < 4; row++) {
+
+                for (let col = 0; col < 4; col++) {
+
+                    newBoard[col][3 - row] =
+                        board[row][col];
+
+                }
+
+            }
+
+
+            board = newBoard;
+
+        }
+
+
+        // MOVE RIGHT
+        function moveRight() {
+
+            rotateBoard();
+            rotateBoard();
+
+            let moved = moveLeft();
+
+            rotateBoard();
+            rotateBoard();
+
+            return moved;
+
+        }
+
+
+        // MOVE DOWN
+        function moveDown() {
+
+            rotateBoard();
+
+            let moved = moveLeft();
+
+            rotateBoard();
+            rotateBoard();
+            rotateBoard();
+
+            return moved;
+
+        }
+
+
+        // MOVE UP
+        function moveUp() {
+
+            rotateBoard();
+            rotateBoard();
+            rotateBoard();
+
+            let moved = moveLeft();
+
+            rotateBoard();
+
+            return moved;
+
+        }
+
+
+        // CAN MOVE
+        function canMove() {
+
+            // EMPTY CELLS
+            for (let row = 0; row < 4; row++) {
+
+                for (let col = 0; col < 4; col++) {
+
+                    if (board[row][col] === 0) {
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+
+            // HORIZONTAL MATCHES
+            for (let row = 0; row < 4; row++) {
+
+                for (let col = 0; col < 3; col++) {
+
+                    if (
+                        board[row][col] ===
+                        board[row][col + 1]
+                    ) {
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+
+            // VERTICAL MATCHES
+            for (let row = 0; row < 3; row++) {
+
+                for (let col = 0; col < 4; col++) {
+
+                    if (
+                        board[row][col] ===
+                        board[row + 1][col]
+                    ) {
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+
+            return false;
+
+        }
+
+
+        // CHECK WIN
+        function checkWin() {
+
+            for (let row = 0; row < 4; row++) {
+
+                for (let col = 0; col < 4; col++) {
+
+                    if (board[row][col] >= 2048) {
+
+                        return true;
+
+                    }
+
+                }
+
+            }
+
+            return false;
+
+        }
+
+
+        // MAKE MOVE
+        function makeMove(direction) {
+
+            let moved = false;
+
+
+            if (direction === "left") {
+
+                moved = moveLeft();
+
+            }
+
+            else if (direction === "right") {
+
+                moved = moveRight();
+
+            }
+
+            else if (direction === "up") {
+
+                moved = moveUp();
+
+            }
+
+            else if (direction === "down") {
+
+                moved = moveDown();
+
+            }
+
+
+            if (moved) {
+
+                addRandomTile();
+
+                drawBoard();
+
+
+                if (checkWin()) {
+
+                    document.getElementById("message").innerText =
+                        "You Win 🎉";
+
+                }
+
+                else if (!canMove()) {
+
+                    document.getElementById("message").innerText =
+                        "Game Over!";
+
+                }
+
+            }
+
+        }
+
+
+        // KEYBOARD CONTROLS
+        document.addEventListener("keydown", function (event) {
+
+            if (
+                event.key === "ArrowLeft" ||
+                event.key.toLowerCase() === "a"
+            ) {
+
+                makeMove("left");
+
+            }
+
+            else if (
+                event.key === "ArrowRight" ||
+                event.key.toLowerCase() === "d"
+            ) {
+
+                makeMove("right");
+
+            }
+
+            else if (
+                event.key === "ArrowUp" ||
+                event.key.toLowerCase() === "w"
+            ) {
+
+                makeMove("up");
+
+            }
+
+            else if (
+                event.key === "ArrowDown" ||
+                event.key.toLowerCase() === "s"
+            ) {
+
+                makeMove("down");
+
+            }
+
+            else if (
+                event.key === "r" ||
+                event.key === "R"
+            ) {
+
+                restartGame();
+
+            }
+
+        });
+
+
+        // RESTART GAME
+        function restartGame() {
+
+            startGame();
+
+        }
+
+
+        // START GAME
+        startGame();
+
+
+        //-----------------------------------
+        // TIME AND DATE FOR FOOTER
+        //-----------------------------------
+        const days = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ];
+
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        function updateWatch() {
+            const now = new Date();
+
+            // Get hours, minutes and seconds
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            // Add leading zero for single-digit numbers
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+
+            // Show the time
+            document.getElementById("time").textContent =
+                hours + ":" + minutes + ":" + seconds;
+
+            // Get day, month and date
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const dateNum = now.getDate();
+
+            // Show the date
+            document.getElementById("date").textContent =
+                dayName + ", " + dateNum + " " + monthName;
+        }
+
+        // Update immediately and every second
+        updateWatch();
+        setInterval(updateWatch, 1000);
+
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        console.log(timezone);
+        document.getElementById("timezone").textContent = timezone;
+
+    </script>
+
+</body>
+
+</html>
