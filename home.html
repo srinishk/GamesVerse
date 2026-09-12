@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone</title>
+
+    <!--Tailwind-->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="bg-gray-950 font-['Comfortaa'] text-gray-300">
+
+    <!-- Navbar -->
+    <nav class="m-10 bg-gray-900 rounded-2xl shadow-md p-8 flex justify-between items-center">
+
+        <h1 class="text-3xl font-bold tracking-widest text-white">
+            GamesVerse
+        </h1>
+
+        <div class="flex gap-10 text-lg">
+            <a href="home.html" class="text-gray-300 hover:text-white transition">Home</a>
+            <a href="#games" class="text-gray-300 hover:text-white transition">Games</a>
+        </div>
+
+    </nav>
+
+    <!-- Stats Section -->
+    <div class="m-10 bg-purple-900 rounded-2xl shadow-md p-8 flex justify-evenly text-center">
+
+        <div>
+            <p class="text-sm text-purple-200 uppercase tracking-widest">Games</p>
+            <h2 class="text-3xl font-bold mt-2 text-white">142</h2>
+        </div>
+
+        <div class="border-l border-purple-700"></div>
+
+        <div>
+            <p class="text-sm text-purple-200 uppercase tracking-widest">Members</p>
+            <h2 class="text-3xl font-bold mt-2 text-white">303.7k</h2>
+        </div>
+
+        <div class="border-l border-purple-700"></div>
+
+        <div>
+            <p class="text-sm text-purple-200 uppercase tracking-widest">Currently Playing</p>
+            <h2 id="players" class="text-3xl font-bold mt-2">5000</h2>
+        </div>
+
+    </div>
+
+    <!--GAME CARDS-->
+    <section class="mt-16 scroll-mt-10" id="games">
+
+        <h1 class="text-5xl font-bold text-center text-white">
+            Popular Games
+        </h1>
+
+        <p class="text-center text-gray-500 mt-4 tracking-widest uppercase text-sm">
+            Check out the most popular games we have!!
+        </p>
+
+        <div class="w-72 h-1 bg-purple-600 mx-auto rounded-full mt-5 mb-10"></div>
+
+        <!--Container-->
+        <div class="flex flex-wrap justify-center gap-8 px-10 items-center">
+
+            <!--CARD 1-->
+            <div
+                class="bg-gray-900 border border-purple-900 w-64 h-62 rounded-2xl shadow-lg flex flex-col items-center justify-center hover:-translate-y-2 hover:border-purple-600 transition-all duration-300">
+
+                <img src="2048.png" class="h-48 w-48 mt-3 object-cover">
+
+                <h1 class="text-2xl font-bold mt-2 text-white">2048</h1>
+
+                <h3 class="text-sm text-center text-gray-400 mx-2">
+                    Slide, merge, and strategize your way to 2048—but one wrong move could
+                    end the game.
+                </h3>
+
+                <button
+                    class="bg-purple-600 text-white rounded-2xl px-4 py-2 hover:bg-purple-500 mt-3 mb-3 border-2 border-purple-700 font-hover"
+                    onclick='window.location.href = "2048.html"'>Play</button>
+
+            </div>
+
+            <!--CARD 2-->
+            <div
+                class="bg-gray-900 border border-purple-900 w-64 h-62 rounded-2xl shadow-lg flex flex-col items-center justify-center hover:-translate-y-2 hover:border-purple-600 transition-all duration-300">
+
+                <img src="memory-game-icon.png" class="h-48 w-48 mt-3 object-cover">
+
+                <h1 class="text-2xl font-bold mt-2 text-white">Memory Game</h1>
+
+                <h3 class="text-sm text-center text-gray-400 mx-2">
+                    Test your memory, sharpen your focus, and match every pair before your
+                    moves run out!
+                </h3>
+
+                <button
+                    class="bg-purple-600 text-white rounded-2xl px-4 py-2 hover:bg-purple-500 mt-3 mb-3 border-2 border-purple-700 font-hover"
+                    onclick='window.location.href = "memory.html"'>Play</button>
+
+            </div>
+
+            <!--CARD 3-->
+            <div
+                class="bg-gray-900 border border-purple-900 w-64 h-62 rounded-2xl shadow-lg flex flex-col items-center justify-center hover:-translate-y-2 hover:border-purple-600 transition-all duration-300">
+
+                <img src="pong.png" class="h-48 w-48 mt-3 object-cover">
+
+                <h1 class="text-2xl font-bold mt-2 text-white">Brick Pong</h1>
+
+                <h3 class="text-sm text-center text-gray-400 mx-2">
+                    Smash through bricks, chase high scores, and put your reflexes to the test in this fast-paced arcade
+                    challenge.
+                </h3>
+
+                <button
+                    class="bg-purple-600 text-white rounded-2xl px-4 py-2 hover:bg-purple-500 mt-3 mb-3 border-2 border-purple-700 font-hover"
+                    onclick='window.location.href = "pong.html"'>Play</button>
+
+            </div>
+
+            <!--CARD 4-->
+            <div
+                class="bg-gray-900 border border-purple-900 w-64 h-62 rounded-2xl shadow-lg flex flex-col items-center justify-center hover:-translate-y-2 hover:border-purple-600 transition-all duration-300">
+
+                <img src="hangman.png" class="h-48 w-48 mt-3 object-cover">
+
+                <h1 class="text-2xl font-bold mt-2 text-white">Hangman</h1>
+
+                <h3 class="text-sm text-center text-gray-400 mx-2">
+                    Crack the hidden word before your guesses run out in this classic test of vocabulary and strategy!
+                </h3>
+
+                <button
+                    class="bg-purple-600 text-white rounded-2xl px-4 py-2 hover:bg-purple-500 mt-3 mb-3 border-2 border-purple-700 font-hover"
+                    onclick='window.location.href = "hangman.html"'>Play</button>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-20 bg-gray-900 text-white rounded-t-3xl px-10 py-10">
+
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-10">
+
+            <!-- Brand -->
+            <div>
+                <h2 class="text-3xl font-bold tracking-widest">GameVerse™</h2>
+                <p class="text-gray-400 mt-3 max-w-sm">
+                    Discover, play, and enjoy some of the most popular games all in one place.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <a href="2048.html" class="hover:text-white transition">2048</a>
+                    <a href="memory.html" class="hover:text-white transition">Memory Game</a>
+                    <a href="pong.html" class="hover:text-white transition">Ping Pong Brick Breaker</a>
+                    <a href="hangman.html" class="hover:text-white transition">Hangman</a>
+                </div>
+            </div>
+
+            <!-- Time -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">Time</h3>
+
+                <div class="flex flex-col gap-2 text-gray-400">
+                    <div class="watch">
+                        <div id="time" class="pb-1">00:00:00</div>
+                        <div id="date" class="text-sm">Monday, 1 January</div>
+                        <div id="timezone" class="text-sm">unable to detect timezone</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom -->
+        <div
+            class="max-w-6xl mx-auto border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-500">
+
+            <p>© 2026 GamesVerse. All rights reserved.</p>
+
+            <p>
+                Made with <span class="text-purple-300">♥</span> for gamers
+            </p>
+
+        </div>
+
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+        const days = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ];
+
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        function updateWatch() {
+            const now = new Date();
+
+            // Get hours, minutes and seconds
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            // Add leading zero for single-digit numbers
+            if (hours < 10) hours = "0" + hours;
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+
+            // Show the time
+            document.getElementById("time").textContent =
+                hours + ":" + minutes + ":" + seconds;
+
+            // Get day, month and date
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const dateNum = now.getDate();
+
+            // Show the date
+            document.getElementById("date").textContent =
+                dayName + ", " + dateNum + " " + monthName;
+        }
+
+        // Update immediately and every second
+        updateWatch();
+        setInterval(updateWatch, 1000);
+
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        console.log(timezone);
+        document.getElementById("timezone").textContent = timezone;
+
+        // Random Currently Playing Statistics
+        const players = document.getElementById("players");
+
+        players.textContent = Math.floor(Math.random() * 9001) + 1000;
+    </script>
+
+</body>
+
+</html>
